@@ -25,8 +25,6 @@ def load_data():
 
 data_hour, data_day = load_data()
 
-data_hour, data_day = load_data()
-
 if menu == "Faktor yang Mempengaruhi Penyewaan":
     st.header("Faktor yang Mempengaruhi Penyewaan Sepeda")
     
@@ -37,7 +35,13 @@ if menu == "Faktor yang Mempengaruhi Penyewaan":
     plt.title("Heatmap Korelasi Fitur - Faktor yang Mempengaruhi Jumlah Penyewaan")
     st.pyplot(plt)
     plt.clf()
-    
+    st.markdown("""
+    **Insight:**
+    - Korelasi yang tinggi ditemukan antara suhu (temp) dan jumlah penyewaan sepeda (cnt). 
+    - Kelembaban (hum) memiliki korelasi negatif sedang, yang berarti kelembaban yang lebih tinggi cenderung mengurangi penyewaan sepeda.
+    - Kecepatan angin (windspeed) menunjukkan korelasi rendah terhadap jumlah penyewaan.
+    """)
+
     # Boxplot Kondisi Cuaca
     st.subheader("Pengaruh Kondisi Cuaca terhadap Jumlah Penyewaan")
     plt.figure(figsize=(10, 5))
@@ -47,6 +51,10 @@ if menu == "Faktor yang Mempengaruhi Penyewaan":
     plt.ylabel("Jumlah Penyewaan")
     st.pyplot(plt)
     plt.clf()
+    st.markdown("""
+    **Insight:**
+    - Kondisi cuaca yang cerah (kode 1) memiliki jumlah penyewaan sepeda tertinggi, sementara cuaca mendung (kode 2) dan hujan (kode 3) cenderung menurunkan jumlah penyewaan.
+    """)
     
     # Scatter Plot
     st.subheader("Pengaruh Suhu, Kelembaban, dan Kecepatan Angin")
@@ -67,7 +75,13 @@ if menu == "Faktor yang Mempengaruhi Penyewaan":
 
     st.pyplot(fig)
     plt.clf()
-
+    st.markdown("""
+    **Insight:**
+    - Suhu memiliki hubungan positif kuat terhadap jumlah penyewaan sepeda. Penyewaan meningkat saat suhu naik.
+    - Kelembaban tinggi menyebabkan penurunan jumlah penyewaan.
+    - Kecepatan angin tidak menunjukkan hubungan signifikan dengan jumlah penyewaan sepeda.
+    """)
+    
 elif menu == "Pola Penggunaan Berdasarkan Jam":
     st.header("Pola Penggunaan Berdasarkan Jam dan Kondisi Cuaca")
     # Line Plot Tren Per Jam
@@ -79,6 +93,39 @@ elif menu == "Pola Penggunaan Berdasarkan Jam":
     plt.ylabel("Jumlah Penyewaan")
     st.pyplot(plt)
     plt.clf()
+    st.markdown("""
+    **Insight:**
+    - Puncak penyewaan sepeda terjadi pada pagi hari (07:00 - 09:00) dan sore hari (17:00 - 19:00), terutama pada hari kerja.
+    - Pada akhir pekan, pola penyewaan lebih stabil sepanjang hari tanpa puncak yang jelas.
+    """)
+
+    # Boxplot Kondisi Cuaca per Jam
+    st.subheader("Boxplot Penyewaan Berdasarkan Kondisi Cuaca per Jam")
+    plt.figure(figsize=(14, 6))
+    sns.boxplot(data=hour_df, x='hr', y='cnt', hue='weathersit', palette='Set1', linewidth=1.2)
+    plt.title("Jumlah Penyewaan Berdasarkan Kondisi Cuaca per Jam")
+    plt.xlabel("Jam")
+    plt.ylabel("Jumlah Penyewaan")
+    st.pyplot(plt)
+    st.markdown("""
+    **Insight:**
+    - Pada cuaca cerah (kode 1), jumlah penyewaan lebih tinggi pada jam sibuk.
+    - Cuaca mendung atau hujan menyebabkan penurunan jumlah penyewaan di semua jam.
+    """)
+
+    # Barplot Hari Kerja vs Akhir Pekan
+    st.subheader("Jumlah Penyewaan Sepeda pada Hari Kerja vs Akhir Pekan")
+    plt.figure(figsize=(10, 5))
+    sns.barplot(data=day_df, x='workingday', y='cnt', palette='muted')
+    plt.title("Jumlah Penyewaan Sepeda pada Hari Kerja vs Akhir Pekan")
+    plt.xlabel("Hari Kerja (0 = Akhir Pekan, 1 = Hari Kerja)")
+    plt.ylabel("Jumlah Penyewaan")
+    st.pyplot(plt)
+    st.markdown("""
+    **Insight:**
+    - Jumlah penyewaan pada hari kerja lebih tinggi dibandingkan akhir pekan.
+    - Ini menunjukkan bahwa sepeda lebih sering digunakan untuk keperluan kerja atau transportasi rutin.
+    """)
 
 elif menu == "Clustering: Manual Grouping":
     st.header("Clustering: Manual Grouping")
@@ -105,3 +152,12 @@ elif menu == "Clustering: Manual Grouping":
     plt.ylabel("Jumlah Hari", fontsize=12)
     st.pyplot(plt)
     plt.clf()
+    st.markdown("""
+    **Hasil Visualisasi:**
+    - Grafik batang menampilkan jumlah hari untuk setiap kategori (Rendah, Sedang, Tinggi).
+    - Anda dapat langsung mengidentifikasi pola perilaku harian berdasarkan jumlah penyewaan.
+
+    **Analisis:**
+    - Jika jumlah hari dalam kategori "Rendah" mendominasi, berarti penyewaan sepeda secara umum kurang maksimal.
+    - Sebaliknya, jika kategori "Tinggi" mendominasi, bisa dikatakan bahwa penyewaan sepeda sangat populer.
+    """)
