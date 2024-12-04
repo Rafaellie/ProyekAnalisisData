@@ -19,13 +19,11 @@ menu = st.sidebar.radio(
 # Data Loading
 @st.cache_data
 def load_data():
-    data_hour = pd.read_csv(
-        r"C:/Users/RafTech/OneDrive/Gambar/Sertifikat/Tugas Semester 3/Submission Analisis Data Rafaellie/dashboard/hour.csv"
-    )
-    data_day = pd.read_csv(
-        r"C:/Users/RafTech/OneDrive/Gambar/Sertifikat/Tugas Semester 3/Submission Analisis Data Rafaellie/dashboard/day.csv"
-    )
+    data_hour = pd.read_csv("hour.csv")
+    data_day = pd.read_csv("day.csv")
     return data_hour, data_day
+
+data_hour, data_day = load_data()
 
 data_hour, data_day = load_data()
 
