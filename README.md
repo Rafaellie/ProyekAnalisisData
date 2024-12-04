@@ -18,10 +18,6 @@ pip install -r requirements.txt
 
 ## Run steamlit app
 ```
-Open google colaboratory Proyek_Analisis_Data
-Runtime -> Run all
-Copy alamat IP 
-Masuk ke dalam url streamlit yang sudah dirunning pada colab
-Masukkan alamat IP pada website
-
+Open Streamlit
+streamlit run dashboard.py
 ```
