@@ -25,6 +25,21 @@ def load_data():
 
 data_hour, data_day = load_data()
 
+# slider untuk memilih rentang tanggal
+start_date = st.date_input("Tanggal Mulai", pd.to_datetime(data_day['dteday']).min())
+end_date = st.date_input("Tanggal Akhir", pd.to_datetime(data_day['dteday']).max())
+
+# Filter data berdasarkan rentang tanggal
+filtered_data = data_day[(pd.to_datetime(data_day['dteday']) >= start_date) & (pd.to_datetime(data_day['dteday']) <= end_date)]
+
+# visualisasi dengan fitur hover
+plt.figure(figsize=(10, 6))
+sns.lineplot(data=filtered_data, x='dteday', y='cnt')
+plt.title("Tren Penyewaan Sepeda")
+plt.xlabel("Tanggal")
+plt.ylabel("Jumlah Penyewaan")
+st.pyplot(plt)
+
 if menu == "Faktor yang Mempengaruhi Penyewaan":
     st.header("Faktor yang Mempengaruhi Penyewaan Sepeda")
     
