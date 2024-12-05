@@ -102,7 +102,7 @@ elif menu == "Pola Penggunaan Berdasarkan Jam":
     # Boxplot Kondisi Cuaca per Jam
     st.subheader("Boxplot Penyewaan Berdasarkan Kondisi Cuaca per Jam")
     plt.figure(figsize=(14, 6))
-    sns.boxplot(data=hour_df, x='hr', y='cnt', hue='weathersit', palette='Set1', linewidth=1.2)
+    sns.boxplot(data=data_hour, x='hr', y='cnt', hue='weathersit', palette='Set1', linewidth=1.2)
     plt.title("Jumlah Penyewaan Berdasarkan Kondisi Cuaca per Jam")
     plt.xlabel("Jam")
     plt.ylabel("Jumlah Penyewaan")
@@ -116,7 +116,7 @@ elif menu == "Pola Penggunaan Berdasarkan Jam":
     # Barplot Hari Kerja vs Akhir Pekan
     st.subheader("Jumlah Penyewaan Sepeda pada Hari Kerja vs Akhir Pekan")
     plt.figure(figsize=(10, 5))
-    sns.barplot(data=day_df, x='workingday', y='cnt', palette='muted')
+    sns.barplot(data=data_day, x='workingday', y='cnt', palette='muted')
     plt.title("Jumlah Penyewaan Sepeda pada Hari Kerja vs Akhir Pekan")
     plt.xlabel("Hari Kerja (0 = Akhir Pekan, 1 = Hari Kerja)")
     plt.ylabel("Jumlah Penyewaan")
