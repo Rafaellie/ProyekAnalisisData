@@ -25,6 +25,26 @@ def load_data():
 
 data_hour, data_day = load_data()
 
+# Mengubah label weekday menjadi kategorikal
+weekday_mapping = {
+    0: "Minggu", 1: "Senin", 2: "Selasa", 3: "Rabu",
+    4: "Kamis", 5: "Jumat", 6: "Sabtu"
+}
+data_hour["weekday"] = data_hour["weekday"].map(weekday_mapping)
+
+# Menambahkan kategori penyewaan berdasarkan rentang kuartil
+q1, q3 = data_day["cnt"].quantile(0.25), data_day["cnt"].quantile(0.75)
+
+def categorize_rentals_v2(count):
+    if count < q1:
+        return "Rendah"
+    elif q1 <= count <= q3:
+        return "Sedang"
+    else:
+        return "Tinggi"
+
+data_day["Category"] = data_day["cnt"].apply(categorize_rentals_v2)
+
 # Menambahkan filter interaktif
 st.sidebar.header("Filter Interaktif")
 
@@ -45,15 +65,6 @@ else:
 
 # Filter kategori penyewaan
 st.sidebar.subheader("Filter Kategori Penyewaan")
-def categorize_rentals(count):
-    if count < 2000:
-        return "Rendah"
-    elif 2000 <= count <= 4000:
-        return "Sedang"
-    else:
-        return "Tinggi"
-
-data_day['Category'] = data_day['cnt'].apply(categorize_rentals)
 categories = data_day['Category'].unique().tolist()
 selected_categories = st.sidebar.multiselect("Pilih Kategori Penyewaan", categories, default=categories)
 
@@ -79,9 +90,10 @@ if menu == "Faktor yang Mempengaruhi Penyewaan":
     if visual_option == "Heatmap Korelasi":
         # Heatmap Korelasi
         st.subheader("Heatmap Korelasi")
+        corr_matrix = data_day.select_dtypes(include=["number"]).corr()
         plt.figure(figsize=(10, 8))
-        sns.heatmap(data_day.corr(), annot=True, fmt=".2f", cmap='coolwarm', linewidths=1, linecolor='white', square=True)
-        plt.title("Heatmap Korelasi Fitur - Faktor yang Mempengaruhi Jumlah Penyewaan")
+        sns.heatmap(corr_matrix, annot=True, fmt=".2f", cmap='coolwarm', linewidths=1, square=True)
+        plt.title("Heatmap Korelasi Fitur")
         st.pyplot(plt)
         plt.clf()
         st.markdown("""
@@ -189,37 +201,23 @@ elif menu == "Pola Penggunaan Berdasarkan Jam":
         - Ini menunjukkan bahwa sepeda lebih sering digunakan untuk keperluan kerja atau transportasi rutin.
         """)
 
-elif menu == "Clustering: Manual Grouping":
-    st.header("Clustering: Manual Grouping")
-    # Menambahkan kolom 'Category'
-    def categorize_rentals(count):
-        if count < 2000:
-            return "Rendah"
-        elif 2000 <= count <= 4000:
-            return "Sedang"
-        else:
-            return "Tinggi"
+    elif menu == "Clustering: Manual Grouping":
+        st.header("Clustering: Manual Grouping")
 
-    data_day['Category'] = data_day['cnt'].apply(categorize_rentals)
+        # Distribusi kategori
+        category_counts = data_day['Category'].value_counts()
 
-    # Menghitung distribusi kategori
-    category_counts = data_day['Category'].value_counts()
+        st.subheader("Distribusi Kategori Penyewaan Sepeda")
+        plt.figure(figsize=(8, 6))
+        sns.barplot(x=category_counts.index, y=category_counts.values, palette="viridis")
+        plt.title("Distribusi Kategori Penyewaan Sepeda")
+        st.pyplot(plt)
+        st.markdown("""
+        **Hasil Visualisasi:**
+        - Grafik batang menampilkan jumlah hari untuk setiap kategori (Rendah, Sedang, Tinggi).
+        - Anda dapat langsung mengidentifikasi pola perilaku harian berdasarkan jumlah penyewaan.
 
-    # Visualisasi distribusi kategori
-    st.subheader("Distribusi Kategori Penyewaan Sepeda")
-    plt.figure(figsize=(8, 6))
-    sns.barplot(x=category_counts.index, y=category_counts.values, palette="viridis")
-    plt.title("Distribusi Kategori Penyewaan Sepeda", fontsize=14)
-    plt.xlabel("Kategori Penyewaan", fontsize=12)
-    plt.ylabel("Jumlah Hari", fontsize=12)
-    st.pyplot(plt)
-    plt.clf()
-    st.markdown("""
-    **Hasil Visualisasi:**
-    - Grafik batang menampilkan jumlah hari untuk setiap kategori (Rendah, Sedang, Tinggi).
-    - Anda dapat langsung mengidentifikasi pola perilaku harian berdasarkan jumlah penyewaan.
-
-    **Analisis:**
-    - Jika jumlah hari dalam kategori "Rendah" mendominasi, berarti penyewaan sepeda secara umum kurang maksimal.
-    - Sebaliknya, jika kategori "Tinggi" mendominasi, bisa dikatakan bahwa penyewaan sepeda sangat populer.
-    """)
+        **Analisis:**
+        - Jika jumlah hari dalam kategori "Rendah" mendominasi, berarti penyewaan sepeda secara umum kurang maksimal.
+        - Sebaliknya, jika kategori "Tinggi" mendominasi, bisa dikatakan bahwa penyewaan sepeda sangat populer.
+        """)
