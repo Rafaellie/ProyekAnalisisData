@@ -201,23 +201,23 @@ elif menu == "Pola Penggunaan Berdasarkan Jam":
         - Ini menunjukkan bahwa sepeda lebih sering digunakan untuk keperluan kerja atau transportasi rutin.
         """)
 
-    elif menu == "Clustering: Manual Grouping":
-        st.header("Clustering: Manual Grouping")
+elif menu == "Clustering: Manual Grouping":
+    st.header("Clustering: Manual Grouping")
 
-        # Distribusi kategori
-        category_counts = data_day['Category'].value_counts()
+    # Distribusi kategori
+    category_counts = data_day['Category'].value_counts()
 
-        st.subheader("Distribusi Kategori Penyewaan Sepeda")
-        plt.figure(figsize=(8, 6))
-        sns.barplot(x=category_counts.index, y=category_counts.values, palette="viridis")
-        plt.title("Distribusi Kategori Penyewaan Sepeda")
-        st.pyplot(plt)
-        st.markdown("""
-        **Hasil Visualisasi:**
-        - Grafik batang menampilkan jumlah hari untuk setiap kategori (Rendah, Sedang, Tinggi).
-        - Anda dapat langsung mengidentifikasi pola perilaku harian berdasarkan jumlah penyewaan.
-
-        **Analisis:**
+    st.subheader("Distribusi Kategori Penyewaan Sepeda")
+    plt.figure(figsize=(8, 6))
+    sns.barplot(x=category_counts.index, y=category_counts.values, palette="viridis")
+    plt.title("Distribusi Kategori Penyewaan Sepeda")
+    st.pyplot(plt)
+    st.markdown("""
+    **Hasil Visualisasi:**
+    - Grafik batang menampilkan jumlah hari untuk setiap kategori (Rendah, Sedang, Tinggi).
+    - Anda dapat langsung mengidentifikasi pola perilaku harian berdasarkan jumlah penyewaan.
+                
+    **Analisis:**
         - Jika jumlah hari dalam kategori "Rendah" mendominasi, berarti penyewaan sepeda secara umum kurang maksimal.
         - Sebaliknya, jika kategori "Tinggi" mendominasi, bisa dikatakan bahwa penyewaan sepeda sangat populer.
-        """)
+    """)
